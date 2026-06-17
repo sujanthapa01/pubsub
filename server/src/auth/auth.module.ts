@@ -6,7 +6,7 @@ import googleOAuthConfig from "./config/google-oauth-config"
 import {GoogleStrategy} from "./strategies/google-oauth.strategy"
 
 @Module({
-  imports :[,ConfigModule.forFeature(googleOAuthConfig)],
+  imports :[ConfigModule.forFeature(googleOAuthConfig)],
   controllers: [AuthController],
   providers: [AuthService,GoogleStrategy],
 })
