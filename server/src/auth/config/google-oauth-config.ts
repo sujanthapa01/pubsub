@@ -1,4 +1,4 @@
-import {registerAs} from "@nestjs/config"
+import { registerAs } from "@nestjs/config"
 
 export default registerAs('googleAuth', () => ({
     ClientId: process.env.GOOGLE_CLIENT_ID!,

@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Inject } from "@nestjs/common";
 import { PrismaClient } from "../../generated/prisma/client";
-import { PrismaPostgresAdapter } from "@prisma/adapter-ppg";
+import { PrismaPg } from '@prisma/adapter-pg';
 import databaseConfiguration from "./config/database-config";
 import type { ConfigType } from "@nestjs/config";
 
@@ -13,7 +13,7 @@ export class DatabaseService
         const databaseUrl = DbConfig.DATABSE_URL;
         console.log(databaseUrl)
         super({
-            adapter: new PrismaPostgresAdapter({
+            adapter: new PrismaPg({
                 connectionString: databaseUrl!,
             }),
         });

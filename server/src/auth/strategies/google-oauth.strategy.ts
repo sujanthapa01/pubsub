@@ -6,12 +6,17 @@ import googleOauthConfig from "../config/google-oauth-config";
 import type { ConfigType } from "@nestjs/config";
 
 
+// Service's'
+import { AuthService } from "../auth.service";
+
+
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     constructor(
         @Inject(googleOauthConfig.KEY)
         private readonly googleConfiguration: ConfigType<typeof googleOauthConfig>,
+        private authService: AuthService
     ) {
         super({
             clientID: googleConfiguration.ClientId!,
@@ -22,6 +27,18 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
     }
     async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback) {
+
         console.log(profile)
+        const { emails} = profile;
+
+
+        const user = await this.authService.findByEmail(emails[0].value)
+
+        if (!user) {
+            const newUser = await this.authService.createUser({ email: emails[0].value })
+            return newUser
+        }
+
+        return { user }
     }
 }
