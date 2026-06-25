@@ -1,10 +1,10 @@
 import { Controller, Get, UseGuards, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import {Public} from "./decorators/public.decorator"
+import { Public } from "./decorators/public.decorator"
 
 // Guard's
-import {GoogleAuthGuard} from "./guards/google-guard/google-auth.guard"
-import {JwtGuard} from "./guards/jwt-guard/jwt-auth.guard"
+import { GoogleAuthGuard } from "./guards/google-guard/google-auth.guard"
+import { JwtGuard } from "./guards/jwt-guard/jwt-auth.guard"
 
 
 
@@ -15,21 +15,38 @@ import {JwtGuard} from "./guards/jwt-guard/jwt-auth.guard"
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Public()
   @UseGuards(GoogleAuthGuard)
   @Get('google/login')
-  googleLogin(){}
+  googleLogin() { }
 
 
   @Public()
-  @UseGuards(JwtGuard)
+  @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  googleCallBack(@Req() req, @Res() res){
-    const access_token = this.authService.generateJwtToken(req.user)
-    res.redirect(`http://localhost:5173?token=${access_token}`)
-    console.log("redirected")
+  async googleCallBack(@Req() req, @Res() res) {
+
+    console.log(req.user)
+    const access_token = await this.authService.generateJwtToken(req.user)
+
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    })
+
+    res.redirect(`http://localhost:3001/home`)
   }
-  
+
+
+  @UseGuards(JwtGuard)
+  @Get("profile")
+  profile(@Req() req){
+    console.log(req.user)
+    return req.user
+  }
+
 }
