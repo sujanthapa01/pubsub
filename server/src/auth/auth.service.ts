@@ -33,8 +33,7 @@ export class AuthService {
         }
     }
 
-
-    async generateJwtToken(user: {
+ generateJwtToken(user: {
         id: string,
         email: string
     }) {
@@ -43,9 +42,8 @@ export class AuthService {
             id: user.id,
             email: user.email
         }
-        let token = await this.jwtService.signAsync(payload)
-        console.log(token)
-        return { access_token: token }
+
+        return this.jwtService.signAsync(payload)
 
 
     }
