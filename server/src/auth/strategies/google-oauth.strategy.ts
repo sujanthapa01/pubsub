@@ -6,7 +6,7 @@ import googleOauthConfig from "../config/google-oauth-config";
 import type { ConfigType } from "@nestjs/config";
 
 
-// Service's'
+// Service's
 import { AuthService } from "../auth.service";
 
 
@@ -29,16 +29,17 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback) {
 
         console.log(profile)
-        const { emails} = profile;
+        const email = profile.emails?.[0]?.value;
 
-
-        const user = await this.authService.findByEmail(emails[0].value)
+        if (!email) {
+            throw new Error("Google account email not found");
+        }
+        const user = await this.authService.findByEmail(email)
 
         if (!user) {
-            const newUser = await this.authService.createUser({ email: emails[0].value })
-            return newUser
-        }
+            const newUser = await this.authService.createUser({ email })
 
-        return { user }
+        }
+        return user
     }
 }
