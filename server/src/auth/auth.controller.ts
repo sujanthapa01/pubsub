@@ -1,10 +1,12 @@
-import { Controller, Get, UseGuards, Req, Res } from '@nestjs/common';
+import { Controller, Get, UseGuards, Req, Res, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from "./decorators/public.decorator"
+import express from 'express';
 
 // Guard's
 import { GoogleAuthGuard } from "./guards/google-guard/google-auth.guard"
 import { JwtGuard } from "./guards/jwt-guard/jwt-auth.guard"
+
 
 
 
@@ -44,9 +46,19 @@ export class AuthController {
 
   @UseGuards(JwtGuard)
   @Get("profile")
-  profile(@Req() req){
+  rofile(@Req() req) {
     console.log(req.user)
     return req.user
   }
+
+
+  @Post("logout")
+  logout(@Res({ passthrough: true }) res: express.Response,) {
+    res.clearCookie("access_token")
+    return {
+      message: "sucess"
+    }
+  }
+
 
 }
