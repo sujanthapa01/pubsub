@@ -40,7 +40,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
     })
 
-    res.redirect(`http://localhost:3001/home`)
+    res.redirect(`http://localhost:3001/`)
   }
 
 
