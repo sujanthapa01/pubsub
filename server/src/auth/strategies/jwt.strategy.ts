@@ -6,16 +6,16 @@ import type { ConfigType } from "@nestjs/config"
 
 
 
-const cookieExtractor = (req:any) => {
-      console.log("cookie:",req.cookies);
- return req?.cookies?.access_token;
+const cookieExtractor = (req: any) => {
+    console.log("cookie:", req.cookies);
+    return req?.cookies?.access_token;
 }
 
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(@Inject(JwtConfigruation.KEY)
-    private readonly JwtConfig: ConfigType<typeof JwtConfigruation>) {
+    JwtConfig: ConfigType<typeof JwtConfigruation>) {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
             ignoreExpiration: false,

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { QuoteService } from "./quote.service"
 import { Cron } from '@nestjs/schedule';
 
@@ -22,4 +22,10 @@ export class QuoteController {
         // return "hii"
         return this.quoteService.getTodayQuote()
     }
+
+    @Post("set")
+    async setQuoteOfTheDay(){
+        return this.quoteService.setQuoteOfTheDay()
+    }
+
 }

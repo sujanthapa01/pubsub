@@ -1,5 +1,8 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from "../database/database.service";
+import getRandomIndex from "./util/getRandomIndex";
+import getDate from "./util/getDate"
+
 @Injectable()
 export class QuoteService {
     constructor(private readonly db: DatabaseService) { }
@@ -8,8 +11,8 @@ export class QuoteService {
     async generateDailyQuote() {
 
         try {
-            const count = await this.db.quote.count()
-            const tableIndex = Math.floor(Math.random() * count)
+
+            const tableIndex = await getRandomIndex(this.db)
 
             const todayQuote = await this.db.quote.findFirst({
                 skip: tableIndex
@@ -59,11 +62,46 @@ export class QuoteService {
                 }
             })
 
-            if(!quote){
+            if (!quote) {
                 return "no quote found in dailyQuoteTable"
             }
 
             return quote
+
+        } catch (error: any) {
+            throw new InternalServerErrorException(error.message)
+        }
+    }
+
+
+
+    async setQuoteOfTheDay() {
+        try {
+
+            const randomTableIndex = await getRandomIndex(this.db)
+
+            const quote = await this.db.quote.findFirst({
+                skip: randomTableIndex
+            })
+
+            if (!quote) {
+                throw new Error("no quote found!")
+            }
+
+            const date = getDate()
+
+            await this.db.dailyQuote.create({
+                data: {
+                    quoteId: quote?.id,
+                    date: date
+                }
+            })
+
+            return {
+                message: "sucess",
+                quote: quote.quote,
+                date: date
+            }
 
         } catch (error: any) {
             throw new InternalServerErrorException(error.message)
