@@ -11,8 +11,8 @@ export default function QuoteComponent() {
   async function fetchQuote() {
     const response = await fetch("http://localhost:3000/quote/today");
     const data = await response.json();
-
-    setResponse({ author: data.quote.author, quote: data.quote.quote });
+console.log(data)
+    setResponse({ author: data.author, quote: data.quote });
   }
 
   useEffect(() => {
@@ -24,8 +24,8 @@ export default function QuoteComponent() {
       {response !== null ? (
         <div className="felx flex-col gap-2 w-[50%]">
           {" "}
-          <p className="text-5xl font-light leading-relaxed tracking-tight">{response.quote}</p>{" "}
-          <p  className="text-lg text-zinc-400">{response.author}</p>{" "}
+          <p className="text-5xl font-light leading-15 tracking-tight">{response.quote}</p>{" "}
+          <p  className="text-lg text-end text-zinc-400">--- {response.author}</p>{" "}
         </div>
       ) : (
         <></>

@@ -2,17 +2,30 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { DatabaseService } from "../database/database.service";
 import getRandomIndex from "./util/getRandomIndex";
 import getDate from "./util/getDate"
+import { RedisService } from "../redis/redis.service"
+import { DailyQuote } from 'generated/prisma/browser';
+
 
 @Injectable()
 export class QuoteService {
-    constructor(private readonly db: DatabaseService) { }
+    constructor(private readonly db: DatabaseService, private readonly cache: RedisService) { }
 
 
     async generateDailyQuote() {
 
         try {
 
+            const date = getDate()
+            const cacheKey = `daily-quote:${date}`
+
+            const cached = await this.cache.get<DailyQuote>(cacheKey)
+            if (cached) {
+                return cached
+            }
+
+
             const tableIndex = await getRandomIndex(this.db)
+
 
             const todayQuote = await this.db.quote.findFirst({
                 skip: tableIndex
@@ -22,9 +35,9 @@ export class QuoteService {
                 throw new NotFoundException("no quote found")
             }
 
-            const today = new Date().toDateString().split("T")[0]
+            const today = getDate()
 
-            return await this.db.dailyQuote.upsert({
+            const quote = await this.db.dailyQuote.upsert({
                 where: {
                     date: today
                 },
@@ -37,6 +50,9 @@ export class QuoteService {
                 }
             })
 
+            this.cache.set(cacheKey, quote, 60 * 60 * 24)
+            return quote
+
         } catch (error: any) {
             throw new InternalServerErrorException(error.message)
         }
@@ -48,11 +64,18 @@ export class QuoteService {
     async getTodayQuote() {
         try {
 
-            const today = new Date().toISOString().split("T")[0]
+            const today = getDate()
+            const cacheKey = `daily-quote:${today}`
             console.log(today)
 
-            const all = await this.db.dailyQuote.findMany()
-            console.log(all)
+            const cached = await this.cache.get<DailyQuote>(cacheKey)
+
+            if (cached) {
+                return cached
+            }
+
+            // const all = await this.db.dailyQuote.findMany()
+            // console.log(all)
             const quote = await this.db.dailyQuote.findUnique({
                 where: {
                     date: today
@@ -61,6 +84,8 @@ export class QuoteService {
                     quote: true
                 }
             })
+
+            await this.cache.set(cacheKey, quote?.quote, 60 * 60 * 24)
 
             if (!quote) {
                 return "no quote found in dailyQuoteTable"
@@ -78,6 +103,15 @@ export class QuoteService {
     async setQuoteOfTheDay() {
         try {
 
+            const date = getDate()
+            const cacheKey = `daily-quote:${date}`
+
+
+            const cached = await this.cache.get<DailyQuote>(cacheKey)
+            if (cached) {
+                return cached
+            }
+
             const randomTableIndex = await getRandomIndex(this.db)
 
             const quote = await this.db.quote.findFirst({
@@ -88,14 +122,15 @@ export class QuoteService {
                 throw new Error("no quote found!")
             }
 
-            const date = getDate()
 
-            await this.db.dailyQuote.create({
+            const result = await this.db.dailyQuote.create({
                 data: {
                     quoteId: quote?.id,
                     date: date
                 }
             })
+
+            await this.cache.set(cacheKey, result, 60 * 60 * 24)
 
             return {
                 message: "sucess",

@@ -17,9 +17,9 @@ export default function Home() {
       <div className="flex flex-1 items-center justify-center">
         <QuoteComponent />
       </div>
-      {/* <div className="fixed bottom-10 flex justify-end w-full px-40">
+      <div className="fixed bottom-10 flex justify-end w-full px-40">
         <LoginButton />
-      </div> */}
+      </div>
     </div>
   );
 }

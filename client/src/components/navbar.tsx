@@ -24,9 +24,9 @@ export default function Navbar() {
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 top-12">
+        
             <MoreOptions />
-          </div>
+          
         )}
       </div>
     </header>
