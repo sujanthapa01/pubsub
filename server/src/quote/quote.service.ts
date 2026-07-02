@@ -71,6 +71,7 @@ export class QuoteService {
             const cached = await this.cache.get<DailyQuote>(cacheKey)
 
             if (cached) {
+                console.log(cached)
                 return cached
             }
 
@@ -90,8 +91,8 @@ export class QuoteService {
             if (!quote) {
                 return "no quote found in dailyQuoteTable"
             }
-
-            return quote
+            console.log(quote.quote)
+            return quote.quote
 
         } catch (error: any) {
             throw new InternalServerErrorException(error.message)
