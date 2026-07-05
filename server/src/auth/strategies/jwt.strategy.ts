@@ -1,8 +1,9 @@
-import { Inject, Injectable } from "@nestjs/common"
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common"
 import { PassportStrategy } from "@nestjs/passport"
 import { ExtractJwt, Strategy } from "passport-jwt"
 import JwtConfigruation from "../config/jwt-auth-config"
 import type { ConfigType } from "@nestjs/config"
+import { AuthService } from "../auth.service"
 
 
 
@@ -15,7 +16,8 @@ const cookieExtractor = (req: any) => {
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(@Inject(JwtConfigruation.KEY)
-    JwtConfig: ConfigType<typeof JwtConfigruation>) {
+    JwtConfig: ConfigType<typeof JwtConfigruation>,
+        private authService: AuthService) {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
             ignoreExpiration: false,
@@ -25,9 +27,19 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
 
     async validate(payload: any) {
+
+        const user = await this.authService.findById(payload.id)
+
+        if(!user){
+            throw new UnauthorizedException()
+        }
+
         return {
-            id: payload.id,
-            email: payload.email
+            id: user.id,
+            email: user.email,
+            display_name: user.display_name,
+            picture: user.picture
+            
         }
     }
 
