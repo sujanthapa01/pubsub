@@ -22,18 +22,26 @@ export class AuthService {
 
     }
 
-    // Create a new user
-    async createUser(data: { email: string }) {
+    async findById(user_id: string) {
         try {
-            const newUser = await this.database.user.create({ data })
-            // console.log(newUser)
+            const user = await this.database.user.findUnique({ where: { id: user_id } })
+            return user
+        } catch (error: any) {
+            throw new BadRequestException(error.message)
+        }
+    }
+
+    // Create a new user
+    async createUser(data: { email: string, pictureUrl: string, displayName: string }) {
+        try {
+            const newUser = await this.database.user.create({ data: { email: data.email, picture: data.pictureUrl, display_name: data.displayName } })
             return newUser
         } catch (error: any) {
             throw new BadRequestException(error.message)
         }
     }
 
- generateJwtToken(user: {
+    generateJwtToken(user: {
         id: string,
         email: string
     }) {

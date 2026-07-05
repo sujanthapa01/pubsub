@@ -9,7 +9,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-end px-8">
+    <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between px-8">
+<p className="text-start text-white">Quote of the day</p>
       <div className="relative">
         <button
           onClick={() => setIsOpen((prev) => !prev)}

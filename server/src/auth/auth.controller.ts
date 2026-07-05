@@ -22,7 +22,7 @@ export class AuthController {
   @Public()
   @UseGuards(GoogleAuthGuard)
   @Get('google/login')
-  googleLogin() { }
+  googleLogin() {}
 
 
   @Public()
@@ -45,10 +45,17 @@ export class AuthController {
 
 
   @UseGuards(JwtGuard)
-  @Get("profile")
-  rofile(@Req() req) {
-    console.log(req.user)
-    return req.user
+  @Get("me")
+  me(@Req() req) {
+    console.log("route /me ",req.user)
+    const user =  req.user
+
+    return {
+      id:user.id,
+      display_name: user.display_name,
+      email:user.email,
+      picture:user.picture
+    }
   }
 
 

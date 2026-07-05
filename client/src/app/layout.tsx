@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import NavigationBar from "@/components/navbar"
+import NavigationBar from "@/components/navbar";
+import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,9 +30,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full `}
     >
       <body className="min-h-full flex flex-col">
-        <NavigationBar/>
-        <main>{children}</main>
-        </body>
+        <NavigationBar />
+        <AuthProvider>
+          <main>{children}</main>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

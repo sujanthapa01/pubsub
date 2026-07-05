@@ -3,7 +3,7 @@ import { DatabaseService } from "../database/database.service";
 import getRandomIndex from "./util/getRandomIndex";
 import getDate from "./util/getDate"
 import { RedisService } from "../redis/redis.service"
-import { DailyQuote } from 'generated/prisma/browser';
+import {Quote } from 'generated/prisma/browser';
 
 
 @Injectable()
@@ -18,7 +18,7 @@ export class QuoteService {
             const date = getDate()
             const cacheKey = `daily-quote:${date}`
 
-            const cached = await this.cache.get<DailyQuote>(cacheKey)
+            const cached = await this.cache.get<Quote>(cacheKey)
             if (cached) {
                 return cached
             }
@@ -68,10 +68,10 @@ export class QuoteService {
             const cacheKey = `daily-quote:${today}`
             console.log(today)
 
-            const cached = await this.cache.get<DailyQuote>(cacheKey)
+            const cached = await this.cache.get<Quote>(cacheKey)
 
             if (cached) {
-                console.log(cached)
+                console.log("from cache",cached)
                 return cached
             }
 
@@ -108,7 +108,7 @@ export class QuoteService {
             const cacheKey = `daily-quote:${date}`
 
 
-            const cached = await this.cache.get<DailyQuote>(cacheKey)
+            const cached = await this.cache.get<Quote>(cacheKey)
             if (cached) {
                 return cached
             }
@@ -128,14 +128,16 @@ export class QuoteService {
                 data: {
                     quoteId: quote?.id,
                     date: date
+                },include : {
+                    quote : true
                 }
             })
 
-            await this.cache.set(cacheKey, result, 60 * 60 * 24)
+            await this.cache.set(cacheKey, result.quote, 60 * 60 * 24)
 
             return {
                 message: "sucess",
-                quote: quote.quote,
+                quote: result.quote,
                 date: date
             }
 

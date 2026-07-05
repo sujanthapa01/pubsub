@@ -1,6 +1,6 @@
 export default function MoreOptions() {
   return (
-    <div className="absolute right-0 top-12 w-64 rounded-2xl border border-zinc-800 bg-zinc-900 p-2 shadow-2xl backdrop-blur-xl">
+    <div className="absolute  right-0 top-12 w-64 rounded-2xl border border-zinc-800 bg-zinc-900 p-2 shadow-2xl backdrop-blur-xl">
       <ul className="flex flex-col gap-1">
         <li>
           <a

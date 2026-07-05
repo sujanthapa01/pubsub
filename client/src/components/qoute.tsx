@@ -24,7 +24,7 @@ console.log(data)
       {response !== null ? (
         <div className="felx flex-col gap-2 w-[50%]">
           {" "}
-          <p className="text-5xl font-light leading-15 tracking-tight">{response.quote}</p>{" "}
+          <p className="text-4xl font-light text-green-400 leading-10 tracking-tight">{response.quote}</p>{" "}
           <p  className="text-lg text-end text-zinc-400">--- {response.author}</p>{" "}
         </div>
       ) : (

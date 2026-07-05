@@ -30,14 +30,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
         console.log(profile)
         const email = profile.emails?.[0]?.value;
+        const displayName = profile.displayName
+        const pictureUrl = profile.photos?.[0]?.value
 
-        if (!email) {
+        if (!email || !displayName || !pictureUrl) {
             throw new Error("Google account email not found");
         }
         const user = await this.authService.findByEmail(email)
 
         if (!user) {
-            const newUser = await this.authService.createUser({ email })
+            const newUser = await this.authService.createUser({ email, displayName, pictureUrl })
 
         }
         return user
