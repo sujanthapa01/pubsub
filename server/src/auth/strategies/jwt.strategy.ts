@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy } from "passport-jwt"
 import JwtConfigruation from "../config/jwt-auth-config"
 import type { ConfigType } from "@nestjs/config"
 import { AuthService } from "../auth.service"
+import { RedisService } from "../../redis/redis.service"
 
 
 
@@ -17,7 +18,7 @@ const cookieExtractor = (req: any) => {
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(@Inject(JwtConfigruation.KEY)
     JwtConfig: ConfigType<typeof JwtConfigruation>,
-        private authService: AuthService) {
+        private authService: AuthService, private cache: RedisService) {
         super({
             jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
             ignoreExpiration: false,
@@ -28,18 +29,25 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
     async validate(payload: any) {
 
+
+        const cached = await this.cache.get(`user:${payload.id}`)
+        if (cached) {
+            return cached
+        }
+
         const user = await this.authService.findById(payload.id)
 
-        if(!user){
+        if (!user) {
             throw new UnauthorizedException()
         }
 
+        await this.cache.set(`user:${user.id}`, user, 60 * 60 * 24)
         return {
             id: user.id,
             email: user.email,
             display_name: user.display_name,
             picture: user.picture
-            
+
         }
     }
 
