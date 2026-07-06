@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import {RedisService} from "../redis/redis.service"
 import { AuthController } from './auth.controller';
 import { ConfigModule } from "@nestjs/config"
 import googleOAuthConfig from "./config/google-oauth-config"
@@ -8,6 +9,7 @@ import { JwtModule } from "@nestjs/jwt"
 
 import {JwtStrategy} from "./strategies/jwt.strategy"
 import JwtAuthConfig from "./config/jwt-auth-config"
+
 
 @Module({
   imports: [ConfigModule.forFeature(googleOAuthConfig),ConfigModule.forFeature(JwtAuthConfig), JwtModule.registerAsync({
@@ -21,6 +23,6 @@ import JwtAuthConfig from "./config/jwt-auth-config"
     }),
   })],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, JwtStrategy],
+  providers: [AuthService, GoogleStrategy, JwtStrategy, RedisService],
 })
 export class AuthModule { }

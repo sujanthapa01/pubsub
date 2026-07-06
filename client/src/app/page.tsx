@@ -12,7 +12,6 @@ export default function Home() {
         <div className="absolute left-1/2 top-1/2 h-[500] w-[500] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5 blur-[140px]" />
       </div>
 
-      <NavigatonBar />
 
       <div className="flex flex-1 items-center justify-center">
         <QuoteComponent />

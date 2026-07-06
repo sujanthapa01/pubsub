@@ -1,10 +1,10 @@
 import { create } from "zustand"
 
 export type User = {
-    id: String
-    email: String
-    display_name: String
-    picture: String
+    id: string
+    email: string
+    display_name: string
+    picture: string
 }
 
 
