@@ -3,7 +3,8 @@ import { DatabaseService } from "../database/database.service";
 import getRandomIndex from "./util/getRandomIndex";
 import getDate from "./util/getDate"
 import { RedisService } from "../redis/redis.service"
-import {Quote } from 'generated/prisma/browser';
+import { Quote } from 'generated/prisma/browser';
+import {CURRENT_GUIDELINES_VERSION} from "../common/constants/quote-guidelines"
 
 
 @Injectable()
@@ -71,7 +72,7 @@ export class QuoteService {
             const cached = await this.cache.get<Quote>(cacheKey)
 
             if (cached) {
-                console.log("from cache",cached)
+                console.log("from cache", cached)
                 return cached
             }
 
@@ -128,8 +129,8 @@ export class QuoteService {
                 data: {
                     quoteId: quote?.id,
                     date: date
-                },include : {
-                    quote : true
+                }, include: {
+                    quote: true
                 }
             })
 
@@ -145,4 +146,20 @@ export class QuoteService {
             throw new InternalServerErrorException(error.message)
         }
     }
+
+
+
+
+    async acceptQuoteGuidelines(userId: string) {
+        return this.db.user.update({
+            where: { id: userId },
+            data: {
+                hasAcceptedQuoteGuidelines: true,
+                quoteGuidelinesAcceptedAt: new Date(),
+                quoteGuidelinesVersion: CURRENT_GUIDELINES_VERSION,
+            },
+        });
+    }
+
+
 }

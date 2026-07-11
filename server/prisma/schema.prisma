@@ -14,10 +14,14 @@ datasource db {
 }
 
 model User {
-  id    String @unique() @default(cuid())
-  email String @unique()
+  id           String  @unique() @default(cuid())
+  email        String  @unique()
   display_name String
-  picture String?
+  picture      String?
+
+  hasAcceptedQuoteGuidelines Boolean   @default(false)
+  quoteGuidelinesAcceptedAt  DateTime?
+  quoteGuidelinesVersion     String?
 
   createdAt DateTime @default(now())
 }
