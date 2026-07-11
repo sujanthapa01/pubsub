@@ -1,0 +1,1 @@
+export const CURRENT_GUIDELINES_VERSION = "2026-07-06"
