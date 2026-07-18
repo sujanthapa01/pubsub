@@ -162,4 +162,9 @@ export class QuoteService {
     }
 
 
+    
+    async WriteNewQuote(){
+
+    }
+
 }
