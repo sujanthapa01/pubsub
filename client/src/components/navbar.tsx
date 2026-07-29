@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Fraunces, IBM_Plex_Mono } from "next/font/google";
 import { useAuthStore } from "@/store/auth";
 import MoreOptions from "./more-option-card";
+import {redirect } from "next/navigation";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -41,7 +42,7 @@ export default function Navbar() {
         borderBottom: `1px solid ${scrolled ? "rgba(185,139,62,0.15)" : "transparent"}`,
       }}
     >
-      <div className="flex items-baseline gap-2.5">
+      <div className="flex items-baseline gap-2.5" onClick={() => {redirect("/home")}}  >
         <span
           className="text-[10px] tracking-[0.22em]"
           style={{ fontFamily: "var(--font-mono)", color: "#B98B3E" }}

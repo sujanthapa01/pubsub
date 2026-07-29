@@ -1,4 +1,5 @@
 import { IBM_Plex_Sans } from "next/font/google";
+import { useAuthStore } from "@/store/auth";
 
 const bodyFont = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -8,7 +9,7 @@ const bodyFont = IBM_Plex_Sans({
 
 const items = [
   { href: "/profile", label: "Profile", icon: "👤", accent: "#B98B3E", authOnly: true },
-  { href: "/write", label: "Write a Quote", icon: "✍️", accent: "#8CA179" },
+  { href: "/guidelines", label: "Write a Quote", icon: "✍️", accent: "#8CA179" },
   { href: "/subscribe", label: "Subscribe", icon: "⭐", accent: "#B98B3E" },
 ];
 
@@ -19,6 +20,8 @@ type MoreOptionsProps = {
 };
 
 export default function MoreOptions({ isLoggedIn, onLogin, onLogout }: MoreOptionsProps) {
+  const { user } = useAuthStore();
+
   return (
     <div
       className={`${bodyFont.variable} flex items-center gap-1 overflow-x-auto rounded-full p-1.5`}
@@ -32,24 +35,38 @@ export default function MoreOptions({ isLoggedIn, onLogin, onLogout }: MoreOptio
     >
       {items
         .filter((item) => !item.authOnly || isLoggedIn)
-        .map((item) => (
-        <a
-          key={item.href}
-          href={item.href}
-          className="flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-sm transition"
-          style={{ color: "#EDE7DA" }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(237,231,218,0.06)")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-        >
-          <span
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px]"
-            style={{ background: `${item.accent}1f` }}
-          >
-            {item.icon}
-          </span>
-          {item.label}
-        </a>
-      ))}
+        .map((item) => {
+          const isProfile = item.href === "/profile";
+          const showPicture = isProfile && user?.picture;
+
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              className="flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-sm transition"
+              style={{ color: "#EDE7DA" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(237,231,218,0.06)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            >
+              {showPicture ? (
+                <img
+                  src={user.picture}
+                  alt=""
+                  className="h-6 w-6 shrink-0 rounded-full object-cover"
+                  style={{ border: `1px solid ${item.accent}55` }}
+                />
+              ) : (
+                <span
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px]"
+                  style={{ background: `${item.accent}1f` }}
+                >
+                  {item.icon}
+                </span>
+              )}
+              {item.label}
+            </a>
+          );
+        })}
 
       <div className="mx-1 h-6 w-px shrink-0" style={{ background: "rgba(237,231,218,0.1)" }} />
 
@@ -73,8 +90,7 @@ export default function MoreOptions({ isLoggedIn, onLogin, onLogout }: MoreOptio
         <button
           onClick={onLogin}
           className="cursor-pointer font-medium flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-5 py-2 text-sm transition"
-          style={{ color: "#1F1B16", background:"#FBF7EE" }}
-        
+          style={{ color: "#1F1B16", background: "#FBF7EE" }}
         >
           <span
             className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white"

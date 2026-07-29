@@ -12,7 +12,7 @@ export default function LoginButton() {
       style={{ background: "#FBF7EE", color: "#1F1B16" }}
     >
       <GoogleIcon />
-      Login twith Google t
+      Login with Google 
     </button>
   );
 }

@@ -4,7 +4,9 @@ export type User = {
     id: string
     email: string
     display_name: string
-    picture: string
+    picture: string,
+    hasAcceptedCurrentGuidelines: boolean
+    
 }
 
 
