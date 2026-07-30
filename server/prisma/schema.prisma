@@ -24,6 +24,13 @@ model User {
   quoteGuidelinesVersion     String?
 
   createdAt DateTime @default(now())
+  quotes    Quote[]
+}
+
+enum QuoteStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Quote {
@@ -31,6 +38,16 @@ model Quote {
   quote      String
   author     String
   dailyQuote DailyQuote?
+
+  userId String?
+  user   User?  @relation(fields: [userId], references: [id])
+
+  status    QuoteStatus @default(PENDING)
+  quoteCode String?     @unique() //quoteCode assign after quote approvel
+
+  createdAt   DateTime  @default(now())
+  reviewedAt  DateTime?
+  publishedAt DateTime?
 }
 
 model DailyQuote {
