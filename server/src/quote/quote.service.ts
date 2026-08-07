@@ -4,7 +4,6 @@ import getRandomIndex from "./util/getRandomIndex";
 import getDate from "./util/getDate"
 import { RedisService } from "../redis/redis.service"
 import { Quote } from 'generated/prisma/browser';
-import {CURRENT_GUIDELINES_VERSION} from "../common/constants/quote-guidelines"
 
 
 @Injectable()
@@ -150,16 +149,7 @@ export class QuoteService {
 
 
 
-    async acceptQuoteGuidelines(userId: string) {
-        return this.db.user.update({
-            where: { id: userId },
-            data: {
-                hasAcceptedQuoteGuidelines: true,
-                quoteGuidelinesAcceptedAt: new Date(),
-                quoteGuidelinesVersion: CURRENT_GUIDELINES_VERSION,
-            },
-        });
-    }
+  
 
 
     
