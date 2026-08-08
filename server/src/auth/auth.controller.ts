@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards, Req, Res, Post, NotFoundException } from '@
 import { AuthService } from './auth.service';
 import { Public } from "./decorators/public.decorator"
 import express from 'express';
-import { CURRENT_GUIDELINES_VERSION } from "../common/constants/quote-guidelines"
+import { CURRENT_GUIDELINES_VERSION } from "../guideline/constants/quote-guidelines"
 
 // Guard's
 import { GoogleAuthGuard } from "./guards/google-guard/google-auth.guard"

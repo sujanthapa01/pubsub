@@ -1,5 +1,5 @@
 import {User} from "../../../../generated/prisma/browser"
 
-export interface UserRepository {
+export interface IUserRepository {
     findById(id: string): Promise <User | null>;
 }
