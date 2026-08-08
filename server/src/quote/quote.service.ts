@@ -8,6 +8,9 @@ import { Quote } from 'generated/prisma/browser';
 
 @Injectable()
 export class QuoteService {
+    acceptQuoteGuidelines(id: string) {
+        throw new Error('Method not implemented.');
+    }
     constructor(private readonly db: DatabaseService, private readonly cache: RedisService) { }
 
 
