@@ -10,7 +10,7 @@ export class WriteQuoteService {
     constructor(private quoteRepo: QuoteRepository, private userRepo: UserRepository, private readonly guidelineService: GuidelineService) { }
 
     async createQuote(userId: string, dto: CreateQuoteDto) {
-
+        console.log("quote service", userId)
         const user = await this.getUserOrThrow(userId)
 
         this.assertHasAcceptedCurrentGuidelines(user)

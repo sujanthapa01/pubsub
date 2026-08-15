@@ -42,7 +42,6 @@ model Quote {
   userId String?
   user   User?  @relation(fields: [userId], references: [id])
 
-  status    QuoteStatus @default(PENDING)
   quoteCode String?     @unique() //quoteCode assign after quote approvel
 
   createdAt   DateTime  @default(now())

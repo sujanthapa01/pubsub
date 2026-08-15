@@ -10,4 +10,5 @@ export class CreateQuoteDto {
     @IsString()
     @MaxLength(100)
     author!: string;
+
 }

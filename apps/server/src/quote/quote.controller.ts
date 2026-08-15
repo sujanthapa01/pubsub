@@ -2,12 +2,16 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { QuoteService } from "./quote.service"
 import { Cron } from '@nestjs/schedule';
 import { JwtGuard } from 'src/auth/guards/jwt-guard/jwt-auth.guard';
+import { WriteQuoteService } from "./services/write-quote.service"
+import { CurrentUser } from "../common/decorators/current-user.decorator"
+import type { CurrentUserPayload } from "../common/decorators/current-user.decorator"
+import { CreateQuoteDto } from "./dto/create-quote.dto"
 
 @Controller('quote')
 export class QuoteController {
 
 
-    constructor(private quoteService: QuoteService) { }
+    constructor(private quoteService: QuoteService, private writeQuoteService: WriteQuoteService) { }
 
 
 
@@ -37,10 +41,20 @@ export class QuoteController {
         return this.quoteService.acceptQuoteGuidelines(body.id)
     }
 
-
-
+    @UseGuards(JwtGuard)
     @Post("write-new-quote")
-    async writeNewQuote(){
-        
+    async writeNewQuote(
+        @CurrentUser() user: CurrentUserPayload,
+        @Body() body: CreateQuoteDto,
+    ) {
+        console.log(user.id)
+        return this.writeQuoteService.createQuote(user.id, body);
+    }
+
+
+    @UseGuards(JwtGuard)
+    @Get("profile")
+    profile(@CurrentUser() user: CurrentUserPayload){
+        console.log("user from cookie",user.id, user.email)
     }
 }

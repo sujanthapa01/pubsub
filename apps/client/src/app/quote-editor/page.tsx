@@ -54,7 +54,8 @@ export default function QuoteEditorPage() {
   }, [user, router]);
 
   const remaining = MAX_LENGTH - text.length;
-  const canSubmit = text.trim().length > 0 && author.trim().length > 0 && remaining >= 0;
+  const canSubmit =
+    text.trim().length > 0 && author.trim().length > 0 && remaining >= 0;
 
   async function handleSubmit() {
     if (!canSubmit || !user) return;
@@ -62,18 +63,18 @@ export default function QuoteEditorPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch("http://localhost:3000/quote", {
+      const res = await fetch("http://localhost:3000/quote/write-new-quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          text: text.trim(),
-          author: author.trim(),
-          userId: user.id,
+         quote: text.trim(),
+          author: author.trim() 
         }),
       });
 
-      if (!res.ok) throw new Error("Couldn't submit your quote. Please try again.");
+      if (!res.ok)
+        throw new Error("Couldn't submit your quote. Please try again.");
 
       const data = await res.json();
       setSubmitted({ id: data.id ?? data.quoteId ?? "pending" });
@@ -99,7 +100,11 @@ export default function QuoteEditorPage() {
   return (
     <main
       className={`${display.variable} ${body.variable} ${mono.variable} min-h-screen`}
-      style={{ background: "#14171B", color: "#EDE7DA", fontFamily: "var(--font-body)" }}
+      style={{
+        background: "#14171B",
+        color: "#EDE7DA",
+        fontFamily: "var(--font-body)",
+      }}
     >
       <div className="mx-auto max-w-2xl px-6 py-20">
         {/* Header */}
@@ -118,29 +123,50 @@ export default function QuoteEditorPage() {
 
           <h1
             className="mt-5 text-4xl sm:text-[2.75rem]"
-            style={{ fontFamily: "var(--font-display)", fontWeight: 500, lineHeight: 1.1 }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 500,
+              lineHeight: 1.1,
+            }}
           >
             Write something
             <br />
-            <span style={{ fontStyle: "italic", color: "#B98B3E" }}>worth remembering</span>
+            <span style={{ fontStyle: "italic", color: "#B98B3E" }}>
+              worth remembering
+            </span>
           </h1>
         </div>
 
         {/* Live preview — same "published card" styling used on the guidelines page */}
         <div
           className="mb-8 rounded-2xl p-8 sm:p-10"
-          style={{ background: "#FBF7EE", color: "#1F1B16", boxShadow: "0 20px 60px -20px rgba(0,0,0,0.6)" }}
+          style={{
+            background: "#FBF7EE",
+            color: "#1F1B16",
+            boxShadow: "0 20px 60px -20px rgba(0,0,0,0.6)",
+          }}
         >
           <p
             className="text-2xl leading-snug sm:text-[1.7rem]"
-            style={{ fontFamily: "var(--font-display)", fontStyle: "italic", minHeight: "3.4rem" }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontStyle: "italic",
+              minHeight: "3.4rem",
+            }}
           >
-            {text.trim() ? `\u201c${text}\u201d` : (
-              <span style={{ color: "#B7AF9C" }}>Your quote will appear here as you type…</span>
+            {text.trim() ? (
+              `\u201c${text}\u201d`
+            ) : (
+              <span style={{ color: "#B7AF9C" }}>
+                Your quote will appear here as you type…
+              </span>
             )}
           </p>
 
-          <div className="mt-6 flex items-center justify-between border-t pt-5" style={{ borderColor: "rgba(31,27,22,0.12)" }}>
+          <div
+            className="mt-6 flex items-center justify-between border-t pt-5"
+            style={{ borderColor: "rgba(31,27,22,0.12)" }}
+          >
             <span className="text-sm" style={{ color: "#6B6559" }}>
               — {author.trim() || "Your name"}, submitted to QuoteDaily
             </span>
@@ -161,7 +187,10 @@ export default function QuoteEditorPage() {
         {/* Form */}
         <div
           className="rounded-xl p-6 sm:p-7"
-          style={{ background: "#1B1E23", border: "1px solid rgba(237,231,218,0.08)" }}
+          style={{
+            background: "#1B1E23",
+            border: "1px solid rgba(237,231,218,0.08)",
+          }}
         >
           <label
             htmlFor="quote-text"
@@ -187,7 +216,10 @@ export default function QuoteEditorPage() {
           <div className="mt-1 flex justify-end">
             <span
               className="text-xs"
-              style={{ fontFamily: "var(--font-mono)", color: remaining < 0 ? "#D98A8A" : "#6B6559" }}
+              style={{
+                fontFamily: "var(--font-mono)",
+                color: remaining < 0 ? "#D98A8A" : "#6B6559",
+              }}
             >
               {remaining} characters left
             </span>
@@ -248,11 +280,18 @@ function SubmittedState({
   return (
     <main
       className={`${display.variable} ${body.variable} ${mono.variable} flex min-h-screen items-center justify-center px-6`}
-      style={{ background: "#14171B", color: "#EDE7DA", fontFamily: "var(--font-body)" }}
+      style={{
+        background: "#14171B",
+        color: "#EDE7DA",
+        fontFamily: "var(--font-body)",
+      }}
     >
       <div
         className="w-full max-w-md rounded-2xl p-8 text-center sm:p-10"
-        style={{ background: "#1B1E23", border: "1px solid rgba(185,139,62,0.25)" }}
+        style={{
+          background: "#1B1E23",
+          border: "1px solid rgba(185,139,62,0.25)",
+        }}
       >
         <span
           className="inline-block rounded-full px-3 py-1 text-[11px] tracking-[0.16em]"
@@ -273,14 +312,21 @@ function SubmittedState({
           Your quote is in review
         </h1>
 
-        <p className="mt-3 text-[15px] leading-relaxed" style={{ color: "#9C9587" }}>
+        <p
+          className="mt-3 text-[15px] leading-relaxed"
+          style={{ color: "#9C9587" }}
+        >
           We'll review it against our community guidelines. If approved, it'll
           get a Quote ID and go live.
         </p>
 
         <div
           className="mt-6 rounded-lg px-4 py-2 text-[11px] tracking-[0.1em]"
-          style={{ fontFamily: "var(--font-mono)", background: "rgba(107,122,94,0.1)", color: "#8CA179" }}
+          style={{
+            fontFamily: "var(--font-mono)",
+            background: "rgba(107,122,94,0.1)",
+            color: "#8CA179",
+          }}
         >
           REFERENCE · {quoteId}
         </div>
@@ -296,7 +342,11 @@ function SubmittedState({
           <button
             onClick={() => router.push("/")}
             className="w-full rounded-lg py-3 text-sm font-medium transition"
-            style={{ background: "transparent", color: "#9C9587", border: "1px solid rgba(237,231,218,0.12)" }}
+            style={{
+              background: "transparent",
+              color: "#9C9587",
+              border: "1px solid rgba(237,231,218,0.12)",
+            }}
           >
             Back to Home
           </button>
